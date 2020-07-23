@@ -111,7 +111,7 @@ static const CGFloat kMenuBarHeight = 80.0f;
         
         if(self.navigationController){
             [self.navigationController.view addSubview:navigationBar];
-            [_CLImageEditorViewController setConstraintsLeading:@0 trailing:@0 top:nil bottom:nil height:@(kNavBarHeight) width:nil parent:self.navigationController.view child:navigationBar peer:nil];
+            [_CLImageEditorViewController setConstraintsLeading:@0 trailing:@0 top:@(dy) bottom:nil height:@(kNavBarHeight) width:nil parent:self.navigationController.view child:navigationBar peer:nil];
         }
         else{
             [self.view addSubview:navigationBar];
@@ -357,6 +357,14 @@ static const CGFloat kMenuBarHeight = 80.0f;
     }
 }
 
+-(void)viewDidAppear:(BOOL)animated{
+    //如果只有一个选型自动出发操作
+    if (_menuView.subviews.count == 1) {
+        CLToolbarMenuItem *view = (CLToolbarMenuItem *)[_menuView.subviews firstObject];
+        [self performSelector:@selector(tappedMenuView:) withObject:view.gestureRecognizers.firstObject];
+    }
+}
+ 
 #pragma mark- View transition
 
 - (void)copyImageViewInfo:(UIImageView*)fromView toView:(UIImageView*)toView
@@ -761,6 +769,9 @@ static const CGFloat kMenuBarHeight = 80.0f;
     [self resetImageViewFrame];
     
     self.currentTool = nil;
+    if (_menuView.subviews.count == 1) {
+        [self pushedCloseBtn:sender];
+    }
 }
 
 - (IBAction)pushedDoneBtn:(id)sender
@@ -781,6 +792,9 @@ static const CGFloat kMenuBarHeight = 80.0f;
             self.currentTool = nil;
         }
         self.view.userInteractionEnabled = YES;
+        if (_menuView.subviews.count == 1) {
+            [self pushedFinishBtn:sender];
+        }
     }];
 }
 
