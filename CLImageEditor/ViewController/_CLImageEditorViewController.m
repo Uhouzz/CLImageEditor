@@ -358,7 +358,7 @@ static const CGFloat kMenuBarHeight = 80.0f;
 }
 
 -(void)viewDidAppear:(BOOL)animated{
-    //如果只有一个选型自动出发操作
+    //如果只有一个功能菜单自动触发操作
     if (_menuView.subviews.count == 1) {
         CLToolbarMenuItem *view = (CLToolbarMenuItem *)[_menuView.subviews firstObject];
         [self performSelector:@selector(tappedMenuView:) withObject:view.gestureRecognizers.firstObject];
@@ -695,10 +695,10 @@ static const CGFloat kMenuBarHeight = 80.0f;
     if(editing){
         _navigationBar.hidden = NO;
         _navigationBar.transform = CGAffineTransformMakeTranslation(0, -_navigationBar.height);
-        
+        CGFloat dy = [UIApplication sharedApplication].statusBarFrame.size.height;
         [UIView animateWithDuration:kCLImageToolAnimationDuration
                          animations:^{
-                             self.navigationController.navigationBar.transform = CGAffineTransformMakeTranslation(0, -self.navigationController.navigationBar.height-20);
+                             self.navigationController.navigationBar.transform = CGAffineTransformMakeTranslation(0, -self.navigationController.navigationBar.height - dy);
                              self->_navigationBar.transform = CGAffineTransformIdentity;
                          }
          ];
