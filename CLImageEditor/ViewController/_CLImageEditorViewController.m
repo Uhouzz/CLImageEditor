@@ -12,6 +12,9 @@
 
 #pragma mark- _CLImageEditorViewController
 
+#define kCLiPhoneX  ([UIScreen mainScreen].bounds.size.height >= 812 || [UIScreen mainScreen].bounds.size.width >= 812)
+#define kCLStatusBarHeight (kCLiPhoneX ? 44 : 20)
+
 static const CGFloat kNavBarHeight = 44.0f;
 static const CGFloat kMenuBarHeight = 80.0f;
 
@@ -104,7 +107,9 @@ static const CGFloat kMenuBarHeight = 80.0f;
         navigationItem.rightBarButtonItem = [self createDoneButton];
         
         CGFloat dy = MIN([UIApplication sharedApplication].statusBarFrame.size.height, [UIApplication sharedApplication].statusBarFrame.size.width);
-        
+        if (dy == 0) {
+            dy = kCLStatusBarHeight;
+        }
         UINavigationBar *navigationBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0, dy, self.view.width, kNavBarHeight)];
         [navigationBar pushNavigationItem:navigationItem animated:NO];
         navigationBar.delegate = self;
@@ -693,9 +698,9 @@ static const CGFloat kMenuBarHeight = 80.0f;
     }
     
     if(editing){
-        _navigationBar.hidden = NO;
-        _navigationBar.transform = CGAffineTransformMakeTranslation(0, -_navigationBar.height);
         CGFloat dy = [UIApplication sharedApplication].statusBarFrame.size.height;
+        _navigationBar.hidden = NO;
+        _navigationBar.transform = CGAffineTransformMakeTranslation(0, -_navigationBar.height  - dy);
         [UIView animateWithDuration:kCLImageToolAnimationDuration
                          animations:^{
                              self.navigationController.navigationBar.transform = CGAffineTransformMakeTranslation(0, -self.navigationController.navigationBar.height - dy);
